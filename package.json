@@ -6,21 +6,15 @@
 	"engines": {
 		"vscode": "^1.44.0"
 	},
+	"publisher": "qzsiniong",
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:vscode-extjs.helloWorld"
+		"workspaceContains:extjs.conf.json"
 	],
 	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "vscode-extjs.helloWorld",
-				"title": "Hello World"
-			}
-		]
-	},
+	"contributes": {},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
@@ -30,16 +24,22 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.44.0",
+		"@babel/parser": "^7.9.4",
+		"@babel/types": "^7.9.5",
 		"@types/glob": "^7.1.1",
+		"@types/json5": "0.0.30",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
-		"eslint": "^6.8.0",
-		"@typescript-eslint/parser": "^2.26.0",
+		"@types/vscode": "^1.44.0",
 		"@typescript-eslint/eslint-plugin": "^2.26.0",
+		"@typescript-eslint/parser": "^2.26.0",
+		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.1",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.3.0"
+	},
+	"dependencies": {
+		"json5": "^2.1.3"
 	}
 }
