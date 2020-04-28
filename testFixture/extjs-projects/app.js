@@ -1,15 +1,18 @@
 Ext.define('erp.app', {
-	requires: ['erp.components.Button', 'erp.components.Input', 'erp.comp.AdvancedLabel'],
+	requires: ['erp.comp.AdvancedLabel','erp.components.Button','erp.components.Input'],
 
 	items: [{
-		xtype: 'Button',
-	},{
-		xtype: 'Input', Input
-	},{
-		xtype: 'advancedlabel',
-	},{
+		xtype: "Button"
+	}, {
+		xtype: 'Input',
+		Input,
+	}, {
+		xtype: 'form',
+	}, {
 		xtype: 'empcombo',
-
-		xtype: 'empCombo',
+	}, {
+		xtype: "Button"
+	}, {
+		xtype: "Button"
 	}]
 });
