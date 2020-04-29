@@ -1,8 +1,7 @@
-import * as babelParser from '@babel/parser';
 import traverse from "@babel/traverse";
 import { StringLiteral } from '@babel/types';
 import * as vscode from 'vscode';
-import { sourceLocationToRange, toValidRequiresProperty } from '../utils/astUtil';
+import { astParse, sourceLocationToRange, toValidRequiresProperty } from '../utils/astUtil';
 import { isNeedRequire } from '../utils/common';
 import { parseXtypes } from '../utils/parseExtJsFile';
 import { xtypeToCmpMapping } from '../utils/xtypeIndexManager';
@@ -15,7 +14,10 @@ function registerEnsureRequireCommand(context: vscode.ExtensionContext) {
 			return;
 		}
 		const text = document.getText();
-		const ast = babelParser.parse(text);
+		const ast = astParse(text);
+		if (ast instanceof SyntaxError) {
+			return ;
+		}
 		const xtypes = await parseXtypes(ast);
 		const componentClasses = new Set<string>();
 		xtypes.forEach(x => {

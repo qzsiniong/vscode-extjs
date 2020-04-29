@@ -1,10 +1,9 @@
-import * as babelParser from '@babel/parser';
 import traverse from "@babel/traverse";
 import * as fs from 'fs';
 import * as json5 from 'json5';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { sourceLocationToRange } from './astUtil';
+import { astParse, sourceLocationToRange } from './astUtil';
 import { isNeedRequire } from './common';
 import { parseExtJsFile } from './parseExtJsFile';
 
@@ -56,11 +55,14 @@ export function cmpClassToFsPath(cmpClass: string) {
 }
 
 async function indexing(text: string) {
-    const ast = babelParser.parse(text);
+    const ast = astParse(text);
+    if (ast instanceof SyntaxError) {
+        return;
+    }
     const components = await parseExtJsFile(ast);
 
-    components.forEach(cmp=>{
-        const {componentClass, requires, xtypes} = cmp;
+    components.forEach(cmp => {
+        const { componentClass, requires, xtypes } = cmp;
         cmpToXtypesMapping[componentClass] = xtypes;
 
         xtypes.forEach(xtype => {
@@ -87,8 +89,8 @@ export function getXtypes(cmp: string) {
 }
 
 export function getRequiredXtypes(cmp: string) {
-    const requires = Object.keys(cmpToXtypesMapping).filter(it=>!isNeedRequire(it));
-    requires.push(...(cmpToRequiresMapping[cmp]|| []));
+    const requires = Object.keys(cmpToXtypesMapping).filter(it => !isNeedRequire(it));
+    requires.push(...(cmpToRequiresMapping[cmp] || []));
     return requires.reduce<string[]>((previousValue, currentCmpClass) => {
         previousValue.push(...(getXtypes(currentCmpClass) || []));
         return previousValue;
@@ -135,24 +137,23 @@ async function validateExtjsDocument(textDocument: vscode.TextDocument): Promise
         }
     }
 
-    try {
-        // @babel/parser
-        const ast = babelParser.parse(text);
-        traverse(ast, {
-            Identifier(path) {
-                const parent = path.parent;
-                if (parent.type === 'ObjectProperty' && path.node.name === 'xtype') {
-                    if (parent.value.type === 'StringLiteral') {
-                        const xtype = parent.value.value,
-                            range = sourceLocationToRange(parent.value.loc!);
-                        validateXtype(xtype, range);
-                    }
+    // @babel/parser
+    const ast = astParse(text);
+    if (ast instanceof SyntaxError) {
+        return;
+    }
+    traverse(ast, {
+        Identifier(path) {
+            const parent = path.parent;
+            if (parent.type === 'ObjectProperty' && path.node.name === 'xtype') {
+                if (parent.value.type === 'StringLiteral') {
+                    const xtype = parent.value.value,
+                        range = sourceLocationToRange(parent.value.loc!);
+                    validateXtype(xtype, range);
                 }
             }
-        });
-    } catch (error) {
-        // SyntaxError
-    }
+        }
+    });
 
     diagnosticCollection.set(textDocument.uri, diagnostics);
 }

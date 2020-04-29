@@ -5,12 +5,12 @@ import { xtypeToCmpMapping } from '../utils/xtypeIndexManager';
 class XtypeCompletionItemProvider implements CompletionItemProvider {
 	provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): ProviderResult<CompletionItem[] | CompletionList> {
 		const completionItems:ProviderResult<CompletionItem[] | CompletionList> = [];
-		const simpleCompletion = new vscode.CompletionItem('Hello World!');
-		completionItems.push(simpleCompletion);
+		// const simpleCompletion = new vscode.CompletionItem('Hello World!');
+		// completionItems.push(simpleCompletion);
 
 		Object.keys(xtypeToCmpMapping).forEach(xtype=>{
 			const xtypeCompletion = new vscode.CompletionItem(`xtype: ${xtype}`);
-			xtypeCompletion.insertText = `xtype: "${xtype}"`;
+			xtypeCompletion.insertText = `xtype: "${xtype}",`;
 			xtypeCompletion.command = {command: 'vscode-extjs:ensure-require', title: 'ensure-require'};
 			completionItems.push(xtypeCompletion);
 		});
