@@ -1,7 +1,8 @@
 .vscode/**
 .vscode-test/**
-out/test/**
-src/**
+**/test/**
+client/src/**
+server/src/**
 .gitignore
 vsc-extension-quickstart.md
 **/tsconfig.json
@@ -9,3 +10,14 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 testFixture
+
+
+.vscode
+**/node_modules
+**/out/
+**/src/
+**/tsconfig.json
+webpack.config*.js
+client
+server
+package.json

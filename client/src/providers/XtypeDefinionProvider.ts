@@ -1,5 +1,5 @@
 import { CancellationToken, DefinitionProvider, ExtensionContext, languages, Location, LocationLink, Position, ProviderResult, Range, TextDocument, Uri } from 'vscode';
-import { cmpClassToFsPath, getCmp } from '../utils/xtypeIndexManager';
+import { getExtjsComponentClass, getExtjsFilePath } from '../utils/ExtjsLanguageManager';
 
 class XtypeDefinitionProvider implements DefinitionProvider {
 	provideDefinition(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Location | Location[] | LocationLink[]> {
@@ -12,9 +12,9 @@ class XtypeDefinitionProvider implements DefinitionProvider {
 		const text = document.getText(new Range(new Position(line, 0), new Position(line, range.end.character + 1)));
 
 		if (new RegExp(`xtype\\s*:\\s*(['"])${xtype}\\1$`).test(text)) {
-			const cmpClass = getCmp(xtype);
-			if (cmpClass) {
-				const fsPath = cmpClassToFsPath(cmpClass);
+			const componentClass = getExtjsComponentClass(xtype);
+			if (componentClass) {
+				const fsPath = getExtjsFilePath(componentClass);
 				const uri = Uri.parse(`file://${fsPath}`);
 				const start = new Position(0, 0);
 				const end = new Position(0, 0);

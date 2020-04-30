@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CancellationToken, CompletionContext, CompletionItem, CompletionItemProvider, CompletionList, ExtensionContext, languages, Position, ProviderResult, TextDocument } from 'vscode';
-import { xtypeToCmpMapping } from '../utils/xtypeIndexManager';
+import { widgetToComponentClassMapping } from '../utils/ExtjsLanguageManager';
 
 class XtypeCompletionItemProvider implements CompletionItemProvider {
 	provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): ProviderResult<CompletionItem[] | CompletionList> {
@@ -8,7 +8,7 @@ class XtypeCompletionItemProvider implements CompletionItemProvider {
 		// const simpleCompletion = new vscode.CompletionItem('Hello World!');
 		// completionItems.push(simpleCompletion);
 
-		Object.keys(xtypeToCmpMapping).forEach(xtype=>{
+		Object.keys(widgetToComponentClassMapping).forEach(xtype=>{
 			const xtypeCompletion = new vscode.CompletionItem(`xtype: ${xtype}`);
 			xtypeCompletion.insertText = `xtype: "${xtype}",`;
 			xtypeCompletion.command = {command: 'vscode-extjs:ensure-require', title: 'ensure-require'};

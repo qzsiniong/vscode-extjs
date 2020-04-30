@@ -6,7 +6,23 @@
 		{
 			"type": "npm",
 			"script": "watch",
-			"problemMatcher": "$tsc-watch",
+			"problemMatcher": {
+				"owner": "typescript",
+				"pattern": [
+					{
+						"regexp": "\\[tsl\\] ERROR",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					// 通过对 Webpack 的输出内容进行匹配，得知编译是否完成
+					"beginsPattern": "Compilation \\w+ starting…",
+					"endsPattern": "Compilation\\s+finished"
+				}
+			},
 			"isBackground": true,
 			"presentation": {
 				"reveal": "never"
